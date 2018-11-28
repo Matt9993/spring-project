@@ -7,8 +7,9 @@ import YAxis from 'recharts/lib/cartesian/YAxis';
 import CartesianGrid from 'recharts/lib/cartesian/CartesianGrid';
 import Tooltip from 'recharts/lib/component/Tooltip';
 import Legend from 'recharts/lib/component/Legend';
+import axios from 'axios';
 
-const data = [
+/* const data = [
   { name: 'Mon', Visits: 1600, Orders: 6300 },
   { name: 'Tue', Visits: 3170, Orders: 4798 },
   { name: 'Wed', Visits: 4890, Orders: 2900 },
@@ -16,7 +17,23 @@ const data = [
   { name: 'Fri', Visits: 3840, Orders: 3500 },
   { name: 'Sat', Visits: 7110, Orders: 8300 },
   { name: 'Sun', Visits: 3760, Orders: 3400 },
-];
+];*/
+
+const data = [];
+getData();
+
+function getData() {
+  axios.get(`https://jsonplaceholder.typicode.com/users`)
+    .then(res => {
+    const contentData = res.data;
+    const days = ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'];
+    for(let i = 0; i < days.length; i++){
+      let id = contentData[i].id;
+      data.push({ name: days[i], Visits: Math.random() * Math.floor(((id + (30 % id)) * 1000 - id^2)),
+        Orders: Math.random() * (id * 1300 - id * 200) + id^3});
+    }
+  });
+}
 
 function SimpleLineChart() {
   return (
